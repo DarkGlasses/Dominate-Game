@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import cardData_NGU from "../service/cardData_NGU";
-import cardData_GR from "../service/cardData_GR"; 
-import NGUPopUp from "../components/NGUPopUp";
-import GRPopUp from "../components/GRPopUp";
+import cardDataGame from "../service/cardDataGame";
+import GamePopup from "../components/GamePopup";
 
 const Home = () => {
+  const upcomingGames = cardDataGame.filter(game => game.releaseDate === "2025");
+  const recommendedGames = cardDataGame.filter(game => game.releaseDate !== "2025");
+
   const [currentIndexNGU, setCurrentIndexNGU] = useState(0);
   const [currentIndexGR, setCurrentIndexGR] = useState(0);
   const [visibleCards, setVisibleCards] = useState(5);
   const [selectedGame, setSelectedGame] = useState(null);
-  const [popupType, setPopupType] = useState(null); 
 
   const updateVisibleCards = () => {
     const width = window.innerWidth;
@@ -23,15 +23,15 @@ const Home = () => {
     updateVisibleCards();
     const handleResize = () => {
       updateVisibleCards();
-      setCurrentIndexNGU((prev) => Math.min(prev, cardData_NGU.length - visibleCards));
-      setCurrentIndexGR((prev) => Math.min(prev, cardData_GR.length - visibleCards));
+      setCurrentIndexNGU((prev) => Math.min(prev, upcomingGames.length - visibleCards));
+      setCurrentIndexGR((prev) => Math.min(prev, recommendedGames.length - visibleCards));
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [visibleCards]);
+  }, [visibleCards, upcomingGames.length, recommendedGames.length]);
 
   const nextSlideNGU = () => {
-    if (currentIndexNGU + visibleCards < cardData_NGU.length) {
+    if (currentIndexNGU + visibleCards < upcomingGames.length) {
       setCurrentIndexNGU(currentIndexNGU + visibleCards);
     }
   };
@@ -43,7 +43,7 @@ const Home = () => {
   };
 
   const nextSlideGR = () => {
-    if (currentIndexGR + visibleCards < cardData_GR.length) {
+    if (currentIndexGR + visibleCards < recommendedGames.length) {
       setCurrentIndexGR(currentIndexGR + visibleCards);
     }
   };
@@ -54,25 +54,18 @@ const Home = () => {
     }
   };
 
-  const handleNGUCardClick = (card) => {
+  const handleCardClick = (card) => {
     setSelectedGame(card);
-    setPopupType("NGU");
-  };
-
-  const handleGRCardClick = (card) => {
-    setSelectedGame(card);
-    setPopupType("GR");
   };
 
   const handleCloseModal = () => {
     setSelectedGame(null);
-    setPopupType(null);
   };
 
   return (
-    <div className="text-white flex flex-col ml-0 md:ml-10 mt-6 md:mt-10 space-y-12 md:space-y-16">
+    <div className="text-white flex flex-col pt-[112px] md:pt-0 md:ml-10 mt-6 md:mt-10 space-y-12 md:space-y-16">
       {/* Game Upcomming Section */}
-      <section className="px-4 relative">
+      <section className="px-10 relative">
         <h1 className="text-3xl md:text-5xl font-bold mb-10">
           New <span className="text-red-800">GAME</span> Upcoming
         </h1>
@@ -85,10 +78,10 @@ const Home = () => {
         </button>
 
         <div className="flex justify-center gap-4">
-          {cardData_NGU.slice(currentIndexNGU, currentIndexNGU + visibleCards).map((card) => (
+          {upcomingGames.slice(currentIndexNGU, currentIndexNGU + visibleCards).map((card) => (
             <div
               key={card.id}
-              onClick={() => handleNGUCardClick(card)}
+              onClick={() => handleCardClick(card)}
               className="bg-black rounded-xl shadow-md flex-shrink-0 cursor-pointer hover:scale-105 transition-transform hover:bg-red-800"
               style={{ width: `${100 / visibleCards}%` }}
             >
@@ -106,7 +99,7 @@ const Home = () => {
 
         <button
           onClick={nextSlideNGU}
-          disabled={currentIndexNGU + visibleCards >= cardData_NGU.length}
+          disabled={currentIndexNGU + visibleCards >= upcomingGames.length}
           className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black disabled:opacity-30 rounded-full p-2 z-10"
         >
           <i className="bi bi-chevron-right text-white text-2xl"></i>
@@ -114,9 +107,9 @@ const Home = () => {
       </section>
 
       {/* Game Recommended Section */}
-      <section className="px-4 relative">
+      <section className="px-10 relative">
         <h1 className="text-3xl md:text-5xl font-bold mb-10">
-          <span className="text-red-800">GAME</span> Recommended 
+          <span className="text-red-800">GAME</span> Recommended
         </h1>
         <button
           onClick={prevSlideGR}
@@ -127,10 +120,10 @@ const Home = () => {
         </button>
 
         <div className="flex justify-center gap-4">
-          {cardData_GR.slice(currentIndexGR, currentIndexGR + visibleCards).map((card) => (
+          {recommendedGames.slice(currentIndexGR, currentIndexGR + visibleCards).map((card) => (
             <div
               key={card.id}
-              onClick={() => handleGRCardClick(card)}
+              onClick={() => handleCardClick(card)}
               className="bg-black rounded-xl shadow-md flex-shrink-0 cursor-pointer hover:scale-105 transition-transform hover:bg-red-800"
               style={{ width: `${100 / visibleCards}%` }}
             >
@@ -148,20 +141,14 @@ const Home = () => {
 
         <button
           onClick={nextSlideGR}
-          disabled={currentIndexGR + visibleCards >= cardData_GR.length}
+          disabled={currentIndexGR + visibleCards >= recommendedGames.length}
           className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black disabled:opacity-30 rounded-full p-2 z-10"
         >
           <i className="bi bi-chevron-right text-white text-2xl"></i>
         </button>
       </section>
 
-      {/* Render pop-up ตามประเภทของเกมที่เลือก */}
-      {selectedGame && popupType === "NGU" && (
-        <NGUPopUp game={selectedGame} onClose={handleCloseModal} />
-      )}
-      {selectedGame && popupType === "GR" && (
-        <GRPopUp game={selectedGame} onClose={handleCloseModal} />
-      )}
+      {selectedGame && <GamePopup game={selectedGame} onClose={handleCloseModal} />}
     </div>
   );
 };

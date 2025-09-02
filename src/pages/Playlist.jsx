@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import cardData_PL from '../service/cardData_PL.js';
-import PLPopup from '../components/PLPopup.jsx';
+import cardDataGame from '../service/cardDataGame.js';
+import GamePopup from '../components/GamePopup.jsx';
 
 const Playlist = () => {
-  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
 
-  const handleOpenPopup = (playlistItem) => {
-    setSelectedPlaylist(playlistItem);
+  const handleOpenPopup = (gameItem) => {
+    setSelectedGame(gameItem);
   };
 
   const handleClosePopup = () => {
-    setSelectedPlaylist(null);
+    setSelectedGame(null);
   };
 
   return (
@@ -21,28 +21,28 @@ const Playlist = () => {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {cardData_PL.map((playlist) => (
+          {cardDataGame.map((game) => (
             <div
-              key={playlist.id}
+              key={game.id}
               className="bg-black rounded-lg shadow-lg overflow-hidden cursor-pointer transform transition-transform duration-200 hover:scale-105 active:scale-95"
-              onClick={() => handleOpenPopup(playlist)}
+              onClick={() => handleOpenPopup(game)}
             >
               <div className="w-full h-48 bg-[#444] flex items-center justify-center text-gray-400">
                 <img
-                  src={playlist.image}
-                  alt={playlist.name}
+                  src={game.img}
+                  alt={game.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4 text-center">
-                <h3 className="text-xl font-semibold">{playlist.name}</h3>
+                <h3 className="text-xl font-semibold">{game.name}</h3>
               </div>
             </div>
           ))}
         </div>
       </div>
       
-      {selectedPlaylist && <PLPopup playlist={selectedPlaylist} onClose={handleClosePopup} />}
+      {selectedGame && <GamePopup game={selectedGame} onClose={handleClosePopup} />}
     </div>
   );
 };

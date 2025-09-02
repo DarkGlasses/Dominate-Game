@@ -4,10 +4,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Review from "./pages/Review";
-import Search from "./pages/Search";
 import News from "./pages/News";
 import Playlist from "./pages/Playlist";
-import Reward from "./pages/Reward";
 
 function App() {
   return (
@@ -21,10 +19,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/review" element={<Review />} />
-            <Route path="/search" element={<Search />} />
             <Route path="/news" element={<News />} />
             <Route path="/playlist" element={<Playlist />} />
-            <Route path="/reward" element={<Reward />} />
           </Routes>
         </main>
       </div>

@@ -32,8 +32,32 @@ const News = () => {
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Latest News Section */}
-          <div className="lg:col-span-2 space-y-8">
+          {/* Popular Trending Section - ย้ายมาไว้ด้านบน */}
+          <div className="lg:order-2 space-y-6">
+            <h2 className="text-3xl font-bold mb-4 flex items-center space-x-2 relative">
+              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm12.75-9h.008v.008h-.008V10.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>
+              </div>
+              <span className="text-red-600">Popular</span> Trending
+            </h2>
+            <ol className="list-none space-y-4 relative">
+              {popularNews.map((newsItem, index) => (
+                <li 
+                  key={newsItem.id} 
+                  className="bg-black p-4 rounded-xl flex items-center space-x-4 shadow-lg cursor-pointer transform transition-transform duration-200 hover:scale-105 active:scale-95"
+                  onClick={() => handleOpenPopup(newsItem)}
+                >
+                  <span className="text-2xl font-bold text-red-600">{index + 1}</span>
+                  <h3 className="text-lg font-semibold">{newsItem.title}</h3>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          {/* Latest News Section - ย้ายมาไว้ด้านซ้าย */}
+          <div className="lg:order-1 lg:col-span-2 space-y-8">
             {/* Large News Card - เปลี่ยนเป็นสไลด์โชว์ */}
             <div className="relative overflow-hidden bg-black rounded-xl shadow-lg h-80">
               {popularNews.map((newsItem, index) => (
@@ -43,7 +67,7 @@ const News = () => {
                     absolute top-0 left-0 w-full h-full transform transition-all duration-1000 ease-in-out cursor-pointer
                     ${index === currentSlide ? 'opacity-100' : 'opacity-0'}
                   `}
-                  onClick={() => handleOpenPopup(newsItem)}
+                  onClick={() => handleOpenPopup(popularNews[currentSlide])}
                 >
                   <div className="w-full h-full flex items-center justify-center text-gray-400">
                     <img src={newsItem.image} alt={newsItem.title} className="w-full h-full object-cover"/>
@@ -84,30 +108,6 @@ const News = () => {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Popular Trending Section */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold mb-4 flex items-center space-x-2 relative">
-              <div className="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center">
-                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm12.75-9h.008v.008h-.008V10.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                 </svg>
-              </div>
-              <span className="text-red-600">Popular</span> Trending
-            </h2>
-            <ol className="list-none space-y-4 relative">
-              {popularNews.map((newsItem, index) => (
-                <li 
-                  key={newsItem.id} 
-                  className="bg-black p-4 rounded-xl flex items-center space-x-4 shadow-lg cursor-pointer transform transition-transform duration-200 hover:scale-105 active:scale-95"
-                  onClick={() => handleOpenPopup(newsItem)}
-                >
-                  <span className="text-2xl font-bold text-red-600">{index + 1}</span>
-                  <h3 className="text-lg font-semibold">{newsItem.title}</h3>
-                </li>
-              ))}
-            </ol>
           </div>
         </div>
       </div>
